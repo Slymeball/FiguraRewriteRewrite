@@ -2,10 +2,7 @@ package org.moon.figura.parsers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import org.moon.figura.FiguraMod;
 import org.moon.figura.config.Configs;
 import org.moon.figura.model.ParentType;
@@ -104,9 +101,13 @@ public class AvatarMetadataParser {
     }
 
     private static void injectCustomization(String path, Customization customization, CompoundTag models) throws IOException {
-        CompoundTag modelPart = getTag(models, path, false);
+        boolean remove = customization.remove != null && customization.remove;
+        CompoundTag modelPart = getTag(models, path, remove);
 
         //Add more of these later
+        if (remove) {
+            return;
+        }
         if (customization.primaryRenderType != null) {
             try {
                 modelPart.putString("primary", RenderTypes.valueOf(customization.primaryRenderType.toUpperCase()).name());
@@ -147,7 +148,7 @@ public class AvatarMetadataParser {
 
         for (int i = 0; i < keys.length; i++) {
             if (!current.contains("chld"))
-                throw new IOException("Invalid part path: \"" + path + "\".");
+                throw new IOException("Invalid part path: \"" + path + "\"");
 
             ListTag children = current.getList("chld", Tag.TAG_COMPOUND);
             int j = 0;
@@ -160,7 +161,7 @@ public class AvatarMetadataParser {
                 }
 
                 if (j == children.size() - 1)
-                    throw new IOException("Invalid part path: \"" + path + "\".");
+                    throw new IOException("Invalid part path: \"" + path + "\"");
             }
 
             if (remove && i == keys.length - 1)
@@ -175,11 +176,15 @@ public class AvatarMetadataParser {
         if (metadata == null || metadata.ignoredTextures == null)
             return;
 
-        CompoundTag compound = textures.getCompound("src");
+        CompoundTag src = textures.getCompound("src");
 
         for (String texture : metadata.ignoredTextures) {
-            CompoundTag texSrc = compound.getCompound(texture);
-            texSrc.remove("src");
+            byte[] bytes = src.getByteArray(texture);
+            int[] size = BlockbenchModelParser.getTextureSize(bytes);
+            ListTag list = new ListTag();
+            list.add(IntTag.valueOf(size[0]));
+            list.add(IntTag.valueOf(size[1]));
+            src.put(texture, list);
         }
     }
 
@@ -199,6 +204,6 @@ public class AvatarMetadataParser {
         public String primaryRenderType, secondaryRenderType;
         public String parentType;
         public String moveTo;
-        public Boolean visible;
+        public Boolean visible, remove;
     }
 }

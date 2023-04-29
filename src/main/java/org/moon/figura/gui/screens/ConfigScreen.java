@@ -57,6 +57,7 @@ public class ConfigScreen extends AbstractPanelScreen {
             ConfigManager.discardConfig();
             list.updateList();
         }));
+        cancel.setActive(false);
 
         //done
         addRenderableWidget(new Button(width / 2 + 4, height - 24, 120, 20, FiguraText.of("gui.done"), null,
@@ -72,7 +73,7 @@ public class ConfigScreen extends AbstractPanelScreen {
     @Override
     public void tick() {
         super.tick();
-        this.cancel.active = list.hasChanges();
+        this.cancel.setActive(list.hasChanges());
     }
 
     @Override

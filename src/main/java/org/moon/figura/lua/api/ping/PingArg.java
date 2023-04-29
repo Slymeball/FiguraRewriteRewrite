@@ -15,14 +15,17 @@ public class PingArg {
 
     private static final int
             NIL = 0,
-            BOOL = 1,
-            INT = 2,
+            BOOL_TRUE = 1,
+            BOOL_FALSE = 2,
             DOUBLE = 3,
             STRING = 4,
             TABLE = 5,
             VECTOR = 6,
             MATRIX = 7,
-            VINT = 8;
+            INT_1B = 8,
+            INT_2B = 9,
+            INT_3B = 10,
+            INT_4B = 11;
 
     private final Varargs args;
 
@@ -50,20 +53,12 @@ public class PingArg {
 
     private static void writeArg(LuaValue val, DataOutputStream dos) throws IOException {
         if (val.isboolean()) {
-            dos.writeByte(BOOL);
-            dos.writeBoolean(val.checkboolean());
+            writeBool(val.checkboolean(), dos);
         } else if (val instanceof LuaString valStr) {
             dos.writeByte(STRING);
             writeString(valStr, dos);
         } else if (val.isint()) {
-            int value = val.checkint();
-            if (value >= -(1 << 20) && value < 1 << 20) {
-                dos.writeByte(VINT);
-                writeVarInt(value, dos);
-            } else {
-                dos.writeByte(INT);
-                dos.writeInt(value);
-            }
+            writeInt(val.checkint(), dos);
         } else if (val.isnumber()) {
             dos.writeByte(DOUBLE);
             dos.writeDouble(val.checkdouble());
@@ -82,21 +77,25 @@ public class PingArg {
         }
     }
 
-    private static void writeVarInt(int value, DataOutputStream dos) throws IOException {
-        boolean neg = value < 0;
-        value = neg ? -value : value;
-        dos.writeByte(value & 63 | (neg ? 64 : 0) | (value > 63 ? 128 : 0));
+    private static void writeBool(boolean value, DataOutputStream dos) throws IOException {
+        dos.writeByte(value ? BOOL_TRUE : BOOL_FALSE);
+    }
 
-        value >>>= 6;
-        if (value == 0)
-            return;
-
-        while ((value & -128) != 0) {
-            dos.writeByte(value & 127 | 128);
-            value >>>= 7;
+    private static void writeInt(int value, DataOutputStream dos) throws IOException {
+        if (Byte.MIN_VALUE <= value && value <= Byte.MAX_VALUE) {
+            dos.writeByte(INT_1B);
+            dos.writeByte((byte) value);
+        } else if (Short.MIN_VALUE <= value && value <= Short.MAX_VALUE) {
+            dos.writeByte(INT_2B);
+            dos.writeShort((short) value);
+        } else if (-0x800000 <= value && value < 0x800000) {
+            dos.writeByte(INT_3B);
+            dos.writeShort((short) (value >> 8));
+            dos.writeByte((byte) (value & 0xFF));
+        } else {
+            dos.writeByte(INT_4B);
+            dos.writeInt(value);
         }
-
-        dos.writeByte(value);
     }
 
     private static void writeString(LuaString string, DataOutputStream dos) throws IOException {
@@ -106,7 +105,7 @@ public class PingArg {
     }
 
     private static void writeTable(LuaTable table, DataOutputStream dos) throws IOException {
-        writeVarInt(table.keyCount(), dos);
+        writeInt(table.keyCount(), dos);
 
         for (LuaValue key : table.keys()) {
             writeArg(key, dos);
@@ -151,35 +150,30 @@ public class PingArg {
         byte type = dis.readByte();
 
         return switch (type) {
-            case BOOL -> LuaValue.valueOf(dis.readBoolean());
-            case INT -> LuaValue.valueOf(dis.readInt());
+            case BOOL_TRUE -> LuaValue.valueOf(true);
+            case BOOL_FALSE -> LuaValue.valueOf(false);
+            case INT_1B, INT_2B, INT_3B, INT_4B -> LuaValue.valueOf(readInt(dis, type));
             case DOUBLE -> LuaValue.valueOf(dis.readDouble());
             case STRING -> LuaValue.valueOf(dis.readNBytes(dis.readUnsignedShort()));
             case TABLE -> readTable(dis, owner);
             case VECTOR -> owner.luaRuntime.typeManager.javaToLua(readVec(dis)).arg1();
             case MATRIX -> owner.luaRuntime.typeManager.javaToLua(readMat(dis)).arg1();
-            case VINT -> LuaValue.valueOf(readVarInt(dis));
             default -> LuaValue.NIL;
         };
     }
 
-    private static int readVarInt(DataInputStream dis) throws IOException {
-        int value = 0;
-        int bytes = 1;
-        byte b = dis.readByte();
-        boolean neg = (b & 64) == 64;
-        value |= b & 63;
-
-        while (bytes <= 4 && (b & 128) == 128) {
-            b = dis.readByte();
-            value |= (b & 127) << bytes++ * 7 - 1;
-        }
-
-        return neg ? -value : value;
+    private static int readInt(DataInputStream dis, byte type) throws IOException {
+        return switch (type) {
+            case INT_1B -> dis.readByte();
+            case INT_2B -> dis.readShort();
+            case INT_3B -> (int) dis.readShort() << 8 | dis.readByte() & 0xFF;
+            case INT_4B -> dis.readInt();
+            default -> 0;
+        };
     }
 
     private static LuaValue readTable(DataInputStream dis, Avatar owner) throws IOException {
-        int size = readVarInt(dis);
+        int size = readInt(dis, dis.readByte());
         LuaTable table = new LuaTable();
 
         for (int i = 0; i < size; i++)
@@ -201,7 +195,7 @@ public class PingArg {
     private static FiguraMatrix<?, ?> readMat(DataInputStream dis) throws IOException {
         byte columns = dis.readByte();
 
-        FiguraVector<? ,?>[] vectors = new FiguraVector[columns];
+        FiguraVector<?, ?>[] vectors = new FiguraVector[columns];
         for (int i = 0; i < columns; i++)
             vectors[i] = readVec(dis);
 

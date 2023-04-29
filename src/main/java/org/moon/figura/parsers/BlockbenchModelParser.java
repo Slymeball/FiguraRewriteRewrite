@@ -160,13 +160,7 @@ public class BlockbenchModelParser {
             }
 
             //add source nbt
-            int[] imageSize = getTextureSize(source);
-            CompoundTag sourceTag = new CompoundTag();
-            sourceTag.putInt("w", imageSize[0]);
-            sourceTag.putInt("h", imageSize[1]);
-            sourceTag.putByteArray("src", source);
-
-            src.put(path, sourceTag);
+            src.putByteArray(path, source);
 
             //fix texture name
             if (!textureType.equals("d"))
@@ -194,6 +188,7 @@ public class BlockbenchModelParser {
                 int id = textureIndex.indexOf(name) + textureOffset;
 
                 //fix texture size for more speed
+                int[] imageSize = getTextureSize(source);
                 float[] fixedSize = new float[]{(float) imageSize[0] / resolution.width, (float) imageSize[1] / resolution.height};
 
                 //add the texture on the map
@@ -588,13 +583,12 @@ public class BlockbenchModelParser {
         for (JsonElement element : outliner) {
             //check if it is an ID first
             if (element instanceof JsonPrimitive) {
-                if (elementMap.containsKey(element.getAsString())) {
-                    CompoundTag elementNbt = elementMap.get(element.getAsString());
-
+                String key = element.getAsString();
+                if (elementMap.containsKey(key)) {
+                    CompoundTag elementNbt = elementMap.get(key);
                     //fix children visibility (very jank)
                     if (elementNbt.contains("vsb") && elementNbt.getBoolean("vsb") == parentVsb)
                         elementNbt.remove("vsb");
-
                     children.add(elementNbt);
                 }
 

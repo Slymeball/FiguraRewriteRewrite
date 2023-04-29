@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import org.moon.figura.FiguraMod;
@@ -72,7 +73,7 @@ public class PermissionsScreen extends AbstractPanelScreen {
         entityWidget = new EntityPreview(entityX, 28, entitySize, entitySize, modelSize, -15f, 30f, Minecraft.getInstance().player, this);
 
         //permission slider and list
-        slider = new SliderWidget(middle + 2, (int) (entityWidget.y + entityWidget.height + lineHeight * 1.5 + 20), listWidth, 11, 1d, 5, true) {
+        slider = new SliderWidget(middle + 2, (int) (entityWidget.getY() + entityWidget.getHeight() + lineHeight * 1.5 + 20), listWidth, 11, 1d, 5, true) {
             @Override
             public void renderWidget(PoseStack stack, int mouseX, int mouseY, float delta) {
                 super.renderWidget(stack, mouseX, mouseY, delta);
@@ -80,11 +81,28 @@ public class PermissionsScreen extends AbstractPanelScreen {
                 PermissionPack selectedPack = playerList.selectedEntry.getPack();
                 MutableComponent text = selectedPack.getCategoryName();
 
+                int x = (int) (this.getX() + this.getWidth() / 2f - font.width(text) * 0.75f);
+                int y = this.getY() - 4 - font.lineHeight * 2;
+
                 stack.pushPose();
-                stack.translate(this.getX() + this.getWidth() / 2f - font.width(text) * 0.75, this.getY() - 4 - font.lineHeight * 2, 0f);
+                stack.translate(x, y, 0f);
                 stack.scale(1.5f, 1.5f, 1f);
                 UIHelper.renderOutlineText(stack, font, text, 0, 0, 0xFFFFFF, 0x202020);
                 stack.popPose();
+
+                MutableComponent info = Component.literal("?").withStyle(Style.EMPTY.withFont(UIHelper.UI_FONT));
+                int color = 0x404040;
+
+                int width = font.width(info);
+                x = Math.min((int) (x + font.width(text) * 1.5f + font.width("  ")), PermissionsScreen.this.width - width);
+                y += font.lineHeight * 0.25f;
+
+                if (UIHelper.isMouseOver(x, y, width, font.lineHeight, mouseX, mouseY)) {
+                    color = 0xFFFFFF;
+                    UIHelper.setTooltip(selectedPack.getCategory().info);
+                }
+
+                font.drawShadow(stack, info, x, y, color);
             }
         };
         permissionsList = new PermissionsList(middle + 2, height, listWidth, height - 54);
@@ -117,7 +135,7 @@ public class PermissionsScreen extends AbstractPanelScreen {
         ));
 
         //debug buttons
-        uuid = new TextField(middle + 2, back.getY() - 24, listWidth - 24, 20, TextField.HintType.NAME, s -> yoink.active = !s.isBlank());
+        uuid = new TextField(middle + 2, back.getY() - 24, listWidth - 24, 20, TextField.HintType.NAME, s -> yoink.setActive(!s.isBlank()));
         yoink = new Button(middle + listWidth - 18, back.getY() - 24, 20, 20, Component.literal("yoink"), Component.literal("Set the selected player's avatar"), button -> {
             String text = uuid.getField().getValue();
             UUID id;
@@ -146,7 +164,7 @@ public class PermissionsScreen extends AbstractPanelScreen {
                 FiguraToast.sendToast("yoinked");
             }
         });
-        yoink.active = false;
+        yoink.setActive(false);
 
         if (FiguraMod.DEBUG_MODE) {
             addRenderableWidget(uuid);
@@ -159,18 +177,18 @@ public class PermissionsScreen extends AbstractPanelScreen {
 
             //hide widgets
             entityWidget.setVisible(!expanded);
-            slider.visible = !expanded;
-            slider.active = !expanded;
-            reloadAll.visible = !expanded;
-            back.visible = !expanded;
+            slider.setVisible(!expanded);
+            slider.setActive(!expanded);
+            reloadAll.setVisible(!expanded);
+            back.setVisible(!expanded);
             uuid.setVisible(!expanded);
-            yoink.visible = !expanded;
+            yoink.setVisible(!expanded);
 
             //update expand button
             expandButton.setTooltip(expanded ? FiguraText.of("gui.permissions.minimize_permissions.tooltip") : FiguraText.of("gui.permissions.expand_permissions.tooltip"));
 
             //set reset button activeness
-            resetButton.active = expanded;
+            resetButton.setActive(expanded);
         }));
 
         //reset all button
@@ -200,7 +218,7 @@ public class PermissionsScreen extends AbstractPanelScreen {
         //add permissions list
         addRenderableWidget(permissionsList);
 
-        listYPrecise = permissionsList.y;
+        listYPrecise = permissionsList.getY();
         expandYPrecise = expandButton.getY();
         resetYPrecise = resetButton.getY();
     }
@@ -219,7 +237,7 @@ public class PermissionsScreen extends AbstractPanelScreen {
         float lerpDelta = (float) (1f - Math.pow(0.6f, delta));
 
         listYPrecise = Mth.lerp(lerpDelta, listYPrecise, expandButton.isToggled() ? 50f : height + 1);
-        this.permissionsList.y = (int) listYPrecise;
+        this.permissionsList.setY((int) listYPrecise);
 
         expandYPrecise = Mth.lerp(lerpDelta, expandYPrecise, expandButton.isToggled() ? listYPrecise - 22f : listYPrecise - 24f);
         this.expandButton.setY((int) expandYPrecise);
@@ -306,7 +324,7 @@ public class PermissionsScreen extends AbstractPanelScreen {
         slider.setAction(null);
 
         //set slider active only for players
-        slider.active = pack instanceof PermissionPack.PlayerPermissionPack && !expanded;
+        slider.setActive(pack instanceof PermissionPack.PlayerPermissionPack && !expanded);
 
         //set step sizes
         slider.setMax(Permissions.Category.values().length);
