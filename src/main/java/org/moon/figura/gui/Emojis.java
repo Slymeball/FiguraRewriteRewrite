@@ -23,8 +23,8 @@ import java.util.*;
 public class Emojis {
 
     private static final List<EmojiContainer> EMOJIS = new ArrayList<>();
-    private static final char DELIMITER = ':';
-    private static final char ESCAPE = '\\';
+    public static final char DELIMITER = ':';
+    public static final char ESCAPE = '\\';
 
     //listener to load emojis from the resource pack
     public static final FiguraResourceListener RESOURCE_LISTENER = new FiguraResourceListener("emojis", manager -> {
@@ -57,7 +57,7 @@ public class Emojis {
         }
     });
 
-    public static Component applyEmojis(Component text) {
+    public static MutableComponent applyEmojis(Component text) {
         Component newText = TextUtils.parseLegacyFormatting(text);
         MutableComponent ret = Component.empty();
         newText.visit((style, string) -> {
@@ -67,7 +67,7 @@ public class Emojis {
         return ret;
     }
 
-    private static Component convertEmoji(String string, Style style) {
+    private static MutableComponent convertEmoji(String string, Style style) {
         //if the string does not contain the delimiter, then return
         if (!string.contains(":"))
             return Component.literal(string).withStyle(style);
@@ -151,6 +151,23 @@ public class Emojis {
         for (EmojiContainer container : EMOJIS)
             text = container.blacklist(text);
         return text;
+    }
+
+    public static List<String> getMatchingEmojis(String query) {
+        if (query.length() == 0 || query.charAt(0) != DELIMITER)
+            return List.of();
+
+        String name = query.substring(1);
+        List<String> emojis = new ArrayList<>();
+
+        for (EmojiContainer container : EMOJIS) {
+            for (String s : container.map.keySet()) {
+                if (s.startsWith(name))
+                    emojis.add(DELIMITER + s + DELIMITER);
+            }
+        }
+
+        return emojis;
     }
 
     private static class EmojiContainer {

@@ -1044,7 +1044,7 @@ public class FiguraModelPart implements Comparable<FiguraModelPart> {
             ),
             aliases = "parentType",
             value = "model_part.set_parent_type")
-    public FiguraModelPart setParentType(@LuaNotNil String parent) {
+    public FiguraModelPart setParentType(String parent) {
         ParentType oldParent = this.parentType;
         this.parentType = ParentType.get(parent);
 
@@ -1057,7 +1057,7 @@ public class FiguraModelPart implements Comparable<FiguraModelPart> {
     }
 
     @LuaWhitelist
-    public FiguraModelPart parentType(@LuaNotNil String parent) {
+    public FiguraModelPart parentType(String parent) {
         return setParentType(parent);
     }
 
@@ -1233,6 +1233,13 @@ public class FiguraModelPart implements Comparable<FiguraModelPart> {
             value = "model_part.add_child"
     )
     public FiguraModelPart addChild(@LuaNotNil FiguraModelPart part) {
+        FiguraModelPart parent = this.parent;
+        while (parent != null) {
+            if (part == parent)
+                throw new LuaError("Cannot add child that's already parent of this part");
+            parent = parent.parent;
+        }
+
         this.children.add(part);
         return this;
     }

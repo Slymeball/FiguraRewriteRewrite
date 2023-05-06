@@ -12,6 +12,7 @@ import org.moon.figura.animation.Interpolation;
 import org.moon.figura.animation.Keyframe;
 import org.moon.figura.animation.TransformType;
 import org.moon.figura.avatar.Avatar;
+import org.moon.figura.config.Configs;
 import org.moon.figura.math.vector.FiguraVec2;
 import org.moon.figura.math.vector.FiguraVec3;
 import org.moon.figura.math.vector.FiguraVec4;
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 public class FiguraModelPartReader {
 
-    public static FiguraModelPart read(Avatar owner, CompoundTag partCompound, List<FiguraTextureSet> textureSets) {
+    public static FiguraModelPart read(Avatar owner, CompoundTag partCompound, List<FiguraTextureSet> textureSets, boolean smoothNormals) {
         //Read name
         String name = partCompound.getString("name");
 
@@ -76,12 +77,19 @@ public class FiguraModelPartReader {
             customization.partType = PartCustomization.PartType.MESH;
         }
 
+        //smooth normals
+        if (partCompound.contains("smo"))
+            smoothNormals = partCompound.getBoolean("smo");
+
+        if (Configs.FORCE_SMOOTH_AVATAR.value || (smoothNormals && !vertices.isEmpty()))
+            smoothfy(vertices);
+
         //Read children
         ArrayList<FiguraModelPart> children = new ArrayList<>(0);
         if (partCompound.contains("chld")) {
             ListTag listTag = partCompound.getList("chld", Tag.TAG_COMPOUND);
             for (Tag tag : listTag)
-                children.add(read(owner, (CompoundTag) tag, textureSets));
+                children.add(read(owner, (CompoundTag) tag, textureSets, smoothNormals));
         }
 
         FiguraModelPart result = new FiguraModelPart(owner, name, customization, vertices, children);
@@ -394,15 +402,6 @@ public class FiguraModelPartReader {
         //"fac": List<Byte, Short, or Int>, just the indices of various vertices
         //"uvs": List<Float>, uv for each vertex
 
-        //TODO: smooth normals
-        boolean smoothNormals = false;
-        if (smoothNormals)
-            readMeshSmooth(facesByTexture, meshData, vertices);
-        else
-            readMeshFlat(facesByTexture, meshData, vertices);
-    }
-
-    private static void readMeshFlat(List<Integer> facesByTexture, CompoundTag meshData, Map<Integer, List<Vertex>> vertices) {
         // Get the vertex, UV, and texture lists from the mesh data
         ListTag verts = meshData.getList("vtx", Tag.TAG_FLOAT);
         ListTag uvs = meshData.getList("uvs", Tag.TAG_FLOAT);
@@ -491,7 +490,29 @@ public class FiguraModelPartReader {
         }
     }
 
-    private static void readMeshSmooth(List<Integer> facesByTexture, CompoundTag meshData, Map<Integer, List<Vertex>> vertices) {
+    //thanks to Scarlet Light#7611
+    private static void smoothfy(Map<Integer, List<Vertex>> verticesByTextuers) {
+        //separate vertices
+        Map<String, List<Vertex>> verticesByPos = new HashMap<>();
+        for (List<Vertex> vertices : verticesByTextuers.values()) {
+            for (Vertex vertex : vertices) {
+                String id = String.valueOf(vertex.getPos());
+                List<Vertex> list = verticesByPos.computeIfAbsent(id, str -> new ArrayList<>(4));
+                list.add(vertex);
+            }
+        }
 
+        //for all separated vertices
+        for (List<Vertex> vertices : verticesByPos.values()) {
+            //sum their normals
+            FiguraVec3 result = FiguraVec3.of();
+            for (Vertex vertex : vertices)
+                result.add(vertex.getNormal());
+            //normalize the normal
+            result.normalize();
+            //apply new normal
+            for (Vertex vertex : vertices)
+                vertex.setNormal(result);
+        }
     }
 }

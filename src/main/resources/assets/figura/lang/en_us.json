@@ -392,10 +392,8 @@
   "figura.config.render_debug_parts_pivot.tooltip.cubes": "cubes",
   "figura.config.render_debug_parts_pivot.tooltip.groups": "groups",
   "figura.config.render_debug_parts_pivot.1": "Off",
-  "figura.config.render_debug_parts_pivot.2": "Visible (Host)",
-  "figura.config.render_debug_parts_pivot.3": "Everything (Host)",
-  "figura.config.render_debug_parts_pivot.4": "Visible (Everyone)",
-  "figura.config.render_debug_parts_pivot.5": "Everything (Everyone)",
+  "figura.config.render_debug_parts_pivot.2": "Host Only",
+  "figura.config.render_debug_parts_pivot.3": "Everyone",
   "figura.config.render_debug_parts_pivot.1.tooltip": "Do not render pivots",
   "figura.config.render_debug_parts_pivot.2.tooltip": "Render pivots of only the Host Avatar",
   "figura.config.render_debug_parts_pivot.3.tooltip": "Render pivots of all Avatars",
@@ -561,8 +559,14 @@
   "figura.config.default_permission_level": "Default Permission Level",
   "figura.config.default_permission_level.tooltip": "Changes the default Permission Level that new players will be assigned into",
 
-  "figura.config.chat_emojis": "Chat Emojis",
-  "figura.config.chat_emojis.tooltip": "Toggles the emoji parsing on chat messages, that converts \":emoji_name:\" into emojis",
+  "figura.config.emojis": "Emojis",
+  "figura.config.emojis.tooltip": "Toggles the emoji parsing on chat messages and signs, that converts \":emoji_name:\" into emojis",
+  "figura.config.emojis.1": "Disabled",
+  "figura.config.emojis.2": "On",
+  "figura.config.emojis.3": "On + Suggestions",
+  "figura.config.emojis.1.tooltip": "No Emojis",
+  "figura.config.emojis.2.tooltip": "Allow Emojis",
+  "figura.config.emojis.3.tooltip": "Allow Emojis and suggest them on chat (like commands)",
 
   "figura.config.easter_eggs": "Enable Easter eggs",
   "figura.config.easter_eggs.tooltip": "Toggles fun and unexpected aspects of Figura (boring!)",
@@ -609,6 +613,9 @@
 
   "figura.config.clear_avatar_data": "Clear Avatar Data",
   "figura.config.clear_avatar_data.tooltip": "Clears ALL saved Avatar Data from the ConfigAPI\nRemoves every file present there, from all avatars",
+
+  "figura.config.force_smooth_avatar": "Force Smooth Avatar",
+  "figura.config.force_smooth_avatar.tooltip": "Force Avatars to always use smooth shading normals",
 
 
   "figura.command.no_avatar_error": "No avatar equipped!",
