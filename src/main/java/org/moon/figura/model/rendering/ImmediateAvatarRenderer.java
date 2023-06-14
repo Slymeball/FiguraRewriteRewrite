@@ -225,8 +225,16 @@ public class ImmediateAvatarRenderer extends AvatarRenderer {
         //visibility
         FiguraMod.popPushProfiler("checkVanillaVisible");
         if (!ignoreVanillaVisibility && custom.vanillaVisible != null && !custom.vanillaVisible) {
+            FiguraMod.popPushProfiler("removeVanillaTransforms");
+            part.resetVanillaTransforms();
             FiguraMod.popProfiler(2);
             return true;
+        }
+
+        //pre render function
+        if (part.preRender != null) {
+            FiguraMod.popPushProfiler("preRenderFunction");
+            avatar.run(part.preRender, avatar.render, part);
         }
 
         //recalculate stuff
@@ -257,11 +265,9 @@ public class ImmediateAvatarRenderer extends AvatarRenderer {
             custom.normalMatrix.set(normalCopy);
         }
 
-        FiguraMod.popProfiler();
-
         if (thisPassedPredicate) {
             //recalculate world matrices
-            FiguraMod.pushProfiler("worldMatrices");
+            FiguraMod.popPushProfiler("worldMatrices");
             if (allowMatrixUpdate) {
                 FiguraMat4 mat = partToWorldMatrices(custom);
                 part.savedPartToWorldMat.set(mat);
@@ -278,11 +284,16 @@ public class ImmediateAvatarRenderer extends AvatarRenderer {
                 int sky = l.getBrightness(LightLayer.SKY, pos.asBlockPos());
                 customizationStack.peek().light = LightTexture.pack(block, sky);
             }
-            FiguraMod.popProfiler();
+        }
+
+        //mid render function
+        if (part.midRender != null) {
+            FiguraMod.popPushProfiler("midRenderFunction");
+            avatar.run(part.midRender, avatar.render, part);
         }
 
         //render this
-        FiguraMod.pushProfiler("pushVertices");
+        FiguraMod.popPushProfiler("pushVertices");
         boolean breakRender = thisPassedPredicate && !part.pushVerticesImmediate(this, remainingComplexity);
 
         //render extras
@@ -342,15 +353,22 @@ public class ImmediateAvatarRenderer extends AvatarRenderer {
 
         //render children
         FiguraMod.popPushProfiler("children");
-        for (FiguraModelPart child : part.children)
+        for (FiguraModelPart child : part.children) {
             if (!renderPart(child, remainingComplexity, thisPassedPredicate)) {
                 breakRender = true;
                 break;
             }
+        }
 
         //reset the parent
         FiguraMod.popPushProfiler("removeVanillaTransforms");
         part.resetVanillaTransforms();
+
+        //post render function
+        if (part.postRender != null) {
+            FiguraMod.popPushProfiler("postRenderFunction");
+            avatar.run(part.postRender, avatar.render, part);
+        }
 
         //pop
         customizationStack.pop();

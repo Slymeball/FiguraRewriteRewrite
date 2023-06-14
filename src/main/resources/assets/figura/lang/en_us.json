@@ -4,8 +4,8 @@
   "figura.ellipsis": "...",
 
 
-  "figura.backend.connected": "Backend Connected!",
-  "figura.backend.disconnected": "Backend Disconnected!",
+  "figura.backend.connected": "Cloud Connected!",
+  "figura.backend.disconnected": "Cloud Disconnected!",
 
   "figura.backend.user_not_found": "User not found",
   "figura.backend.avatar_not_found": "Avatar not found",
@@ -166,7 +166,8 @@
   "figura.gui.avatar_settings.tooltip": "Avatar Settings",
   "figura.gui.duplicate_keybind": "This key is also used for:\n%s",
   "figura.gui.favorited": "Favorited",
-  "figura.gui.new_version.tooltip": "A new version of Figura is available! %s",
+  "figura.gui.new_version.tooltip": "A new version of Figura is available! %s\nClick to download it in your browser!",
+  "figura.gui.old_version.tooltip": "Are you a time traveller? The latest version is %s",
   "figura.gui.clear": "Clear",
 
   "figura.gui.text_hint.any": "Text",
@@ -210,9 +211,9 @@
 
   "figura.gui.wardrobe.expand_wardrobe.tooltip": "Expand wardrobe list",
   "figura.gui.wardrobe.minimize_wardrobe.tooltip": "Minimize wardrobe list",
-  "figura.gui.wardrobe.upload.tooltip": "Upload avatar to the Figura server\nOther players will see you as the uploaded avatar",
-  "figura.gui.wardrobe.reload.tooltip": "Reload avatar from the Figura server",
-  "figura.gui.wardrobe.delete.tooltip": "Delete avatar from the Figura server",
+  "figura.gui.wardrobe.upload.tooltip": "Upload avatar to cloud\nOther players can only see you as the uploaded avatar",
+  "figura.gui.wardrobe.reload.tooltip": "Reload avatar from cloud",
+  "figura.gui.wardrobe.delete.tooltip": "Delete avatar from cloud",
   "figura.gui.wardrobe.sound.tooltip": "Avatar Sounds",
   "figura.gui.wardrobe.keybind.tooltip": "Avatar Keybinds",
   "figura.gui.wardrobe.new_avatar.tooltip": "Create new Avatar",
@@ -257,8 +258,8 @@
   "figura.gui.status.reason": "Reason",
   "figura.gui.status.size": "Size",
   "figura.gui.status.size.0": "none",
-  "figura.gui.status.size.1": "Avatar size is greater than %s",
-  "figura.gui.status.size.2": "Avatar size is greater than %s",
+  "figura.gui.status.size.1": "Avatar size over upload limit (%s)",
+  "figura.gui.status.size.2": "Avatar size is over 75%% of the upload limit (%s)",
   "figura.gui.status.size.3": "ok",
 
   "figura.gui.status.texture": "Texture",
@@ -271,7 +272,7 @@
   "figura.gui.status.script.2": "This Avatar script targets a newer version of Figura",
   "figura.gui.status.script.3": "ok",
 
-  "figura.gui.status.backend": "Backend",
+  "figura.gui.status.backend": "Cloud",
   "figura.gui.status.backend.1": "Disconnected",
   "figura.gui.status.backend.2": "Connecting",
   "figura.gui.status.backend.3": "Connected",
@@ -367,9 +368,11 @@
   "figura.config.format_script.1":"Disabled",
   "figura.config.format_script.2":"Light",
   "figura.config.format_script.3":"Heavy",
+  "figura.config.format_script.4":"AST",
   "figura.config.format_script.1.tooltip":"No compacting",
   "figura.config.format_script.2.tooltip":"Minimal compacting, removes only comments and unnecessary whitespaces",
   "figura.config.format_script.3.tooltip":"Same as Light and also compacts everything into a single line",
+  "figura.config.format_script.4.tooltip":"Parses code into Abstract Syntax Tree and reconstructs code into theoretically optimal representation",
 
 
   "figura.config.rendering": "Rendering",
@@ -429,11 +432,15 @@
   "figura.config.action_wheel_title.3": "Top",
   "figura.config.action_wheel_title.4": "Middle",
   "figura.config.action_wheel_title.5": "Bottom",
+  "figura.config.action_wheel_title.6": "Icon",
+  "figura.config.action_wheel_title.7": "Sides",
   "figura.config.action_wheel_title.1.tooltip": "Renders like the Figura GUI tooltips",
   "figura.config.action_wheel_title.2.tooltip": "Renders the text next to the mouse",
   "figura.config.action_wheel_title.3.tooltip": "Renders the text above the Action Wheel",
   "figura.config.action_wheel_title.4.tooltip": "Renders the text in the middle of the Action Wheel",
   "figura.config.action_wheel_title.5.tooltip": "Renders the text below the Action Wheel",
+  "figura.config.action_wheel_title.6.tooltip": "Renders all Action's text below its Icon",
+  "figura.config.action_wheel_title.7.tooltip": "Renders all Action's text in the sides of the Action Wheel",
 
   "figura.config.action_wheel_slots_indicator": "Slots Indicator Text",
   "figura.config.action_wheel_slots_indicator.tooltip": "Changes the position of this Page's Slots Indicator text, which is based on the slots shown in the action wheel\nIf the Selected Action Text is set to the same position as this, the action text will take priority when rendering",
@@ -486,6 +493,9 @@
 
   "figura.config.text_scroll_delay": "Text Scroll Delay",
   "figura.config.text_scroll_delay.tooltip": "Changes the delay (in ticks) that the Text should wait before scrolling",
+
+  "figura.config.reduced_motion": "Reduced Motion",
+  "figura.config.reduced_motion.tooltip": "Disables all screen animations, making them instant, or a single frame\nAlso makes tooltips show in the bottom center of the screen, instead of following the mouse\nDoes not affect animations that have their own setting (like background animation and text scroll)",
 
 
   "figura.config.paperdoll": "Paperdoll",
@@ -547,8 +557,8 @@
   "figura.config.button_location.4.tooltip": "Renders the Figura button as text, anchored in the Bottom Left corner of the screen",
   "figura.config.button_location.5.tooltip": "Renders the Figura button as text, anchored in the Bottom Right corner of the screen",
 
-  "figura.config.update_channel": "Update Type",
-  "figura.config.update_channel.tooltip": "Changes the version type when looking for new Figura updates",
+  "figura.config.update_channel": "Figura Update Channel",
+  "figura.config.update_channel.tooltip": "Changes the version mode when looking for new Figura updates",
   "figura.config.update_channel.1": "None",
   "figura.config.update_channel.2": "Releases (Stable)",
   "figura.config.update_channel.3": "Pre-releases (Unstable)",
@@ -560,13 +570,13 @@
   "figura.config.default_permission_level.tooltip": "Changes the default Permission Level that new players will be assigned into",
 
   "figura.config.emojis": "Emojis",
-  "figura.config.emojis.tooltip": "Toggles the emoji parsing on chat messages and signs, that converts \":emoji_name:\" into emojis",
+  "figura.config.emojis.tooltip": "Toggles the emoji parsing on chat messages and signs, that converts \":emoji_name:\" into emojis\nChanges on signs are only updated once reloading the world",
   "figura.config.emojis.1": "Disabled",
   "figura.config.emojis.2": "On",
   "figura.config.emojis.3": "On + Suggestions",
   "figura.config.emojis.1.tooltip": "No Emojis",
-  "figura.config.emojis.2.tooltip": "Allow Emojis",
-  "figura.config.emojis.3.tooltip": "Allow Emojis and suggest them on chat (like commands)",
+  "figura.config.emojis.2.tooltip": "Allow Emojis\nSuggestions can be given by pressing tab (like player names)",
+  "figura.config.emojis.3.tooltip": "Allow Emojis and automatically suggest them on chat (like commands)",
 
   "figura.config.easter_eggs": "Enable Easter eggs",
   "figura.config.easter_eggs.tooltip": "Toggles fun and unexpected aspects of Figura (boring!)",
@@ -575,20 +585,20 @@
   "figura.config.dev": "Dev",
   "figura.config.dev.tooltip": "Developer/Experimental settings",
 
-  "figura.config.connection_toasts": "Backend Connection Toasts",
-  "figura.config.connection_toasts.tooltip": "Toggles if the game should show up toasts related with the backend connection status",
+  "figura.config.connection_toasts": "Cloud Connection Toasts",
+  "figura.config.connection_toasts.tooltip": "Toggles if the game should show up toasts related with the cloud connection status",
 
   "figura.config.log_others": "Log non-host scripts",
   "figura.config.log_others.tooltip": "Allows debug logging and errors of non-host scripts",
 
   "figura.config.log_pings": "Log Pings",
-  "figura.config.log_pings.tooltip": "Chooses wherever to log pings data",
+  "figura.config.log_pings.tooltip": "Toggle logging of pings messages\nThe logging output is controlled by the \"Print Output\" config",
   "figura.config.log_pings.1": "Off",
-  "figura.config.log_pings.2": "Chat",
-  "figura.config.log_pings.3": "Logger",
+  "figura.config.log_pings.2": "Host Only",
+  "figura.config.log_pings.3": "Everyone",
   "figura.config.log_pings.1.tooltip": "Do not log pings",
-  "figura.config.log_pings.2.tooltip": "The in-game chat (the chat also prints in the logger)",
-  "figura.config.log_pings.3.tooltip": "The output log of your client",
+  "figura.config.log_pings.2.tooltip": "Log pings of only the Host Avatar",
+  "figura.config.log_pings.3.tooltip": "Log pings of all Avatars",
 
   "figura.config.sync_pings": "Sync Pings",
   "figura.config.sync_pings.tooltip.1": "Toggles if host pings should be executed locally or received from the backend",
@@ -602,8 +612,8 @@
   "figura.config.main_dir": "Figura Folder Location",
   "figura.config.main_dir.tooltip": "Changes the location of the Figura folder",
 
-  "figura.config.server_ip": "Figura Server IP",
-  "figura.config.server_ip.tooltip": "Sets the IP of the server used for Figura's multiplayer features",
+  "figura.config.server_ip": "Figura Cloud IP",
+  "figura.config.server_ip.tooltip": "Sets the IP of the cloud used for Figura's multiplayer features",
 
   "figura.config.clear_cache": "Clear Cache",
   "figura.config.clear_cache.tooltip": "Clears the cache files\nRemoves things like cached Avatars and UI states\nWill not clear settings nor saved permissions",
@@ -742,7 +752,7 @@
   "figura.docs.wheel_action.right_click": "Function that is executed when the right mouse button is clicked\nThe function have one argument\nThe first argument is this action itself",
   "figura.docs.wheel_action.toggle": "Function that is executed when the Action is toggled\nThe function have two arguments\nThe first argument is toggle state of this action\nThe second argument is this action itself",
   "figura.docs.wheel_action.untoggle": "Function that is executed when the Action is untoggled\nThe function have two arguments\nThe first argument is toggle state of this action\nThe second argument is this action itself",
-  "figura.docs.wheel_action.scroll": "Function that is executed when the mouse is scrolled\nThe function have two arguments\nhe first argument is toggle state of this action\nThe second argument is this action itself",
+  "figura.docs.wheel_action.scroll": "Function that is executed when the mouse is scrolled\nThe function have two arguments\nThe first argument is mouse wheel direction\nThe second argument is this action itself",
   "figura.docs.wheel_action.get_title": "Gets this Action title",
   "figura.docs.wheel_action.set_title": "Sets the title of the Action",
   "figura.docs.wheel_action.get_color": "Gets this Action color",
@@ -757,7 +767,7 @@
   "figura.docs.wheel_action.set_on_right_click": "Sets the function that is executed when the right mouse button is clicked\nThe function have one argument\nThe first argument is this action itself",
   "figura.docs.wheel_action.set_on_toggle": "Sets the function that is executed when the Action is toggled\nThe function have two arguments\nThe first argument is toggle state of this action\nThe second argument is this action itself",
   "figura.docs.wheel_action.set_on_untoggle": "Sets the function that is executed when the Action is untoggled\nThe function have two arguments\nThe first argument is toggle state of this action\nThe second argument is this action itself",
-  "figura.docs.wheel_action.set_on_scroll": "Sets the function that is executed when the mouse is scrolled\nThe function have two arguments\nhe first argument is toggle state of this action\nThe second argument is this action itself",
+  "figura.docs.wheel_action.set_on_scroll": "Sets the function that is executed when the mouse is scrolled\nThe function have two arguments\nThe first argument is mouse wheel direction\nThe second argument is this action itself",
   "figura.docs.wheel_action.get_toggle_title": "Gets this Action toggled title",
   "figura.docs.wheel_action.set_toggle_title": "Sets the title of the Action when it is toggled",
   "figura.docs.wheel_action.get_toggle_color": "Gets this Action toggled color",
@@ -822,6 +832,7 @@
   "figura.docs.avatar.get_version": "Gets the version string of this avatar",
   "figura.docs.avatar.get_authors": "Gets the authors string of this avatar",
   "figura.docs.avatar.get_name": "Gets the name string of this avatar",
+  "figura.docs.avatar.get_entity_name": "Attempts to get the entity name of this avatar, defaulting to the avatar name",
   "figura.docs.avatar.get_size": "Gets the file size of this avatar in bytes",
   "figura.docs.avatar.has_texture": "Gets whether or not this avatar has a texture",
   "figura.docs.avatar.has_script_error": "Gets whether this script currently has stopped due to an error (kinda useless lol)",
@@ -899,7 +910,6 @@
   "figura.docs.blockstate.get_blast_resistance": "Gets the blast resistance of this BlockState",
   "figura.docs.blockstate.as_item": "Returns an ItemStack representing this block in item form, whatever Minecraft deems that to be\nIf it cannot find an item for this block, it will return nil",
   "figura.docs.blockstate.get_tags": "Returns a table containing all the tags of this block, as strings",
-  "figura.docs.blockstate.get_material": "Gets the name of the material this block is made of",
   "figura.docs.blockstate.has_collision": "Returns true if this block has collision",
   "figura.docs.blockstate.get_collision_shape": "Returns a table representing the bounding boxes of the collision shape\nThe table a list of every shape, containing two Vector3, where the first vector is one corner of the box and the other vector is the other corner",
   "figura.docs.blockstate.get_outline_shape": "Returns a table representing the bounding boxes of the outline shape\nThe table a list of every shape, containing two Vector3, where the first vector is one corner of the box and the other vector is the other corner",
@@ -914,8 +924,10 @@
   "figura.docs.client.get_fps": "Gets the FPS of the client\nReturns 0 if the fps counter isn't ready yet (or if your pc is just that bad)",
   "figura.docs.client.get_fps_string": "Gets the FPS string of the client, displayed in the F3 menu\nContains info on the fps, the fps limit, vsync, cloud types, and biome blend radius",
   "figura.docs.client.is_paused": "Returns true if the client is paused",
-  "figura.docs.client.get_version": "Returns the \"version\" of your client\nIn testing, this returned \"Fabric\"",
-  "figura.docs.client.get_version_type": "Returns the \"version type\" of your client\nIn testing, this returned \"Fabric\"",
+  "figura.docs.client.get_version": "Returns the Minecraft version of your client",
+  "figura.docs.client.get_version_name": "Returns the extended name of the Minecraft version of your client",
+  "figura.docs.client.is_snapshot": "Returns if the client is running a snapshot or full release version",
+  "figura.docs.client.get_client_brand": "Returns the \"version type\" of your client, usually the client modloader brand",
   "figura.docs.client.get_server_brand": "Returns the type of server you're on\nIn singleplayer, this is \"Integrated\"",
   "figura.docs.client.get_chunk_statistics": "Returns a string containing information about the player's chunk\nThis string appears in the F3 menu",
   "figura.docs.client.get_entity_statistics": "Returns a string containing information about the loaded entities on the client\nThis string appears in the F3 menu",
@@ -938,6 +950,7 @@
   "figura.docs.client.get_gui_scale": "Returns the current value of your Gui Scale setting\nIf you use auto, then it gets the actual current scale",
   "figura.docs.client.get_camera_pos": "Returns the position of the viewer's camera",
   "figura.docs.client.get_camera_rot": "Returns the rotation of the viewer's camera",
+  "figura.docs.client.get_camera_dir": "Returns a unit vector pointing in the direction that the camera is facing",
   "figura.docs.client.get_text_width": "Returns the width of the given text in pixels\nIn case of multiple lines, return the largest width of all lines",
   "figura.docs.client.get_text_height": "Returns the height of the given text in pixels",
   "figura.docs.client.get_text_dimensions": "Returns the width and height of the given text, wrapping lines and trimming to a max width",
@@ -954,6 +967,9 @@
   "figura.docs.client.get_server_data": "Returns a table with information of the current connected server (also for singleplayer worlds)",
   "figura.docs.client.get_date": "Returns a table with information about the client current time",
   "figura.docs.client.get_frame_time": "Returns the current fraction between the last tick and the next tick\nThis is the value used as \"delta\" in the RENDER event",
+  "figura.docs.client.list_atlases": "Returns a list of all registered atlases paths",
+  "figura.docs.client.get_atlas": "Returns a TextureAtlasAPI object with information about the given atlas\nReturns nil if the atlas was not found",
+  "figura.docs.client.get_tab_list": "Returns a table with the text shown in the tablist",
 
 
   "figura.docs.config": "A global API used to save and load avatar data between game sessions",
@@ -970,6 +986,7 @@
   "figura.docs.entity.get_uuid": "Gets the UUID of the proxied entity",
   "figura.docs.entity.get_type": "Gets the Minecraft identifier of this entity\nFor instance, \"minecraft:pig\"",
   "figura.docs.entity.is_hamburger": "\"Refused to elaborate\"",
+  "figura.docs.entity.is_cute": "Checks if this entity is cute",
   "figura.docs.entity.get_velocity": "Gets the current velocity of this entity in world coordinates, calculated as its position this tick minus its position last tick",
   "figura.docs.entity.get_look_dir": "Returns a unit vector pointing in the direction that this entity is looking\nSee the blue line in the F3+B screen for an example",
   "figura.docs.entity.get_frozen_ticks": "Gets the number of ticks this entity has been freezing in powder snow for",
@@ -1049,6 +1066,7 @@
   "figura.docs.player.is_fishing": "Returns if the player is currently fishing",
   "figura.docs.player.get_charged_attack_delay": "Returns the delay (in ticks) of charged attacks",
   "figura.docs.player.get_shoulder_entity": "Returns a table of the nbt of this entity left or right shoulder entity",
+  "figura.docs.player.get_team_info": "Returns a table with information about the team of this player\nReturns nil if the player doesnt have a team",
   "figura.docs.player.get_ip_address": "Returns this player's IP address",
 
   "figura.docs.viewer": "An extension of the Player, used for the viewer only, meant as proxy to allow access to some host only functions",
@@ -1058,8 +1076,8 @@
   "figura.docs.events.entity_init": "The ENTITY_INIT event is run once this avatar's entity exists",
   "figura.docs.events.tick": "The TICK event is run every tick in-game if this avatar's entity exists",
   "figura.docs.events.world_tick": "The WORLD_TICK event is run every in-game tick",
-  "figura.docs.events.render": "The RENDER event is run every frame, before the avatar is rendered\nTakes a parameter delta, which is a number from 0 to 1 indicating the proportion of the way the game is between ticks\nAnd also a second context parameter, which is a string of the current RenderMode, with the source of this render event",
-  "figura.docs.events.post_render": "The POST_RENDER event runs every frame, after the avatar is rendered\nTakes a parameter delta, which is a number from 0 to 1 indicating the proportion of the way the game is between ticks",
+  "figura.docs.events.render": "The RENDER event is run every frame, before the avatar is rendered\nTakes a parameter delta, which is a number from 0 to 1 indicating the proportion of the way the game is between ticks\nA second parameter, giving out context of the current RenderMode, with is a string with the name of the source of this render event\nAnd a third paramenter, being the source matrix used to render the Avatar",
+  "figura.docs.events.post_render": "The POST_RENDER event runs every frame, after the avatar is rendered\nTakes a parameter delta, which is a number from 0 to 1 indicating the proportion of the way the game is between ticks\nA second parameter, giving out context of the current RenderMode, with is a string with the name of the source of this render event\nAnd a third paramenter, being the source matrix used to render the Avatar",
   "figura.docs.events.world_render": "The WORLD_RENDER event is run every frame, before the world is rendered\nAlways runs when a world is visible, even when the avatar itself is not, so this runs even in first person\nTakes a parameter delta, which is a number from 0 to 1 indicating the proportion of the way the game is between ticks",
   "figura.docs.events.post_world_render": "The POST_WORLD_RENDER event runs every frame, after the world is rendered\nAlways runs when a world is visible, even when the avatar itself is not, so this runs even in first person\nTakes a parameter delta, which is a number from 0 to 1 indicating the proportion of the way the game is between ticks",
   "figura.docs.events.chat_send_message": "The CHAT_SEND_MESSAGE event is run every time you send a message in chat\nA string parameter is passed in, which contains the message that was sent\nThe return value is chained to the next events of the same type, whereas NIL cancels the message from being sent and any other value will modify the sent message (if allowed in the settings)",
@@ -1069,15 +1087,18 @@
   "figura.docs.events.mouse_move": "The MOUSE_MOVE event runs every time the mouse is moved around\nTakes two parameters, x and y, which is the difference from the mouse position based on the latest saved position\nIf returned true, the event cancels its vanilla function\nNote that cancelling the vanilla function also cancels saving the last mouse position",
   "figura.docs.events.mouse_press": "The MOUSE_PRESS event runs every time a mouse button is pressed\nTakes three number parameters, a \"button\", which is the number id of the button that was been pressed, the \"action\", which is the status of the press event (0 for release, 1 for press, 2 for hold), and the \"modifier\", which is a bitmask number detecting if you have any modifier keys being pressed (like shift or alt, for example)\nIf returned true, the event cancels its vanilla function",
   "figura.docs.events.key_press": "The KEY_PRESS event runs every time a keyboard key is pressed\nTakes three number parameters, a \"key\", which is the number id of the key that was been pressed, the \"action\", which is the status of the press event (0 for release, 1 for press, 2 for hold), and the \"modifier\", which is a bitmask number detecting if you have any modifier keys being pressed (like shift or alt, for example)\nIf returned true, the event cancels its vanilla function",
+  "figura.docs.events.char_typed": "The CHAR_TYPED event runs every time a character is inputted\nTakes three parameters, the resulting \"string\" after converting the code point, the \"modifier\", which is a bitmask number detecting if you have any modifier keys being pressed (like shift or alt, for example), and the \"codepoint\" of the inputted char",
   "figura.docs.events.use_item": "The USE_ITEM event is run every time the entity uses an item\nThe item, action and amount of particles this item would produce is given as argument\nIf returned true, the event cancels its vanilla function",
   "figura.docs.events.arrow_render": "The ARROW_RENDER event is run for every arrow entity shot by the Avatar owner\nIt takes two arguments, the tick delta, and the arrow entity\nReturning \"true\" stops this arrow from rendering, including the Arrow parent parts\nRequires the \"Vanilla Model Change\" permission",
   "figura.docs.events.item_render": "Called on every one of your items that is being rendered\nIt takes six arguments, the item, the rendering mode, the position, rotation and scale that it would be applied, and if its being rendered from the left hand\nReturning a ModelPart parented to Item, stops the rendering of this item and will render the returned part instead",
+  "figura.docs.events.on_play_sound": "Called every time a new sound is played\nTake as arguments, the sound ID, its world position, volume, pitch, if the sound should loop, the sound category, and the sound file path",
+  "figura.docs.events.resource_reload": "Called every time that the client resources are reloaded, allowing you to re-create or update resource texture references",
   "figura.docs.events.get_events": "Returns a table with all events types",
 
   "figura.docs.event": "A hook for a certain event in Minecraft\nYou may register functions to one, and those functions will be called when the event occurs",
-  "figura.docs.event.register": "Registers the given function to the given event\nWhen the event occurs, the function will be run\nFunctions are run in the order they were registered\nThe optional name parameter is used when you wish to later remove a function from the event",
+  "figura.docs.event.register": "Register a function on this event\nFunctions are run in registration order\nAn optional string argument can be given, grouping functions under that name, for an easier management later on",
   "figura.docs.event.clear": "Clears the given event of all its functions",
-  "figura.docs.event.remove": "Removes all functions with the given name from the event\nReturns the number of functions that were removed",
+  "figura.docs.event.remove": "Removes either a function from this event, or when given a string, remove all functions registred under that name\nReturns the number of functions that were removed",
   "figura.docs.event.get_registered_count": "Returns a number of how many functions is registered by this name",
 
 
@@ -1094,6 +1115,8 @@
   "figura.docs.host.send_chat_message": "Sends the given message in the chat",
   "figura.docs.host.send_chat_command": "Sends the given command in the chat",
   "figura.docs.host.append_chat_history": "Appends the message on the recent chat history",
+  "figura.docs.host.get_chat_message": "Returns a table with information about a chat message\nTakes an index, were 1 means the last message on chat",
+  "figura.docs.host.set_chat_message": "Modifies a chat message with the given text\nTakes an index, were 1 means the last message on chat\nSetting the message to nil will effectively remove it from the chat",
   "figura.docs.host.swing_arm": "Animates swinging the player's arm\nIf the boolean is true, then the offhand is the one that swings",
   "figura.docs.host.is_first_person": "Returns true if the camera is in first person mode",
   "figura.docs.host.is_camera_backwards": "Returns true if the camera is facing backwards",
@@ -1144,6 +1167,7 @@
   "figura.docs.itemstack.is_tool": "Check if this item is a Tool (Axe, Shovel, Pickaxe, ...)",
   "figura.docs.itemstack.get_equipment_slot": "Returns the slot name of where this item is used",
   "figura.docs.itemstack.copy": "Returns a copy of this item stack",
+  "figura.docs.itemstack.get_blockstate": "Returns the blockstate representation of this item stack\nIf this item has no block representation, returns nil",
 
 
   "figura.docs.keybinds": "A global API containing a function to create new Keybind instances",
@@ -1220,6 +1244,12 @@
 
 
   "figura.docs.model_part": "Represents a node in the model tree, basically a group/cube/mesh in Blockbench\nEach bbmodel file is itself a ModelPart, and all of your models are contained in a global ModelPart called \"models\"",
+  "figura.docs.model_part.pre_render": "Function to run before this part starts being rendered",
+  "figura.docs.model_part.mid_render": "Function to run during the middle of this part's rendering, after its matrices are calculated",
+  "figura.docs.model_part.post_render": "Function to run after this part and its children is rendered",
+  "figura.docs.model_part.set_pre_render": "Sets a function to run before this part starts being rendered",
+  "figura.docs.model_part.set_mid_render": "Sets a function to run during the middle of this part's rendering, after its matrices are calculated",
+  "figura.docs.model_part.set_post_render": "Sets a function to run after this part and its children is rendered",
   "figura.docs.model_part.get_name": "The name of this model part",
   "figura.docs.model_part.get_parent": "Gets the parent part of this part\nIf this part has no parent, returns nil",
   "figura.docs.model_part.get_children": "Gets the children of this part, stored in a table",
@@ -1297,6 +1327,7 @@
   "figura.docs.model_part.add_child": "Adds the given part into this part's children list",
   "figura.docs.model_part.remove_child": "Removes the given part from this part's children list",
   "figura.docs.model_part.copy": "Returns a copy of this part, with all customizations and vertices copied\nChildren parts are passed as reference, in a new list",
+  "figura.docs.model_part.new_part": "Creates a new, empty, group model part as a child of this part, at the same pivot point\nTakes two arguments, the new part's name and optionally its parent type",
 
 
   "figura.docs.nameplate": "A global API which is used for customizing your player's nameplate in chat, above your head, and in the tab list",
@@ -1365,8 +1396,8 @@
 
   "figura.docs.render_task": "Represents a rendering task for Figura to complete each frame\nAn abstract superclass of ItemTask, BlockTask, and TextTask",
   "figura.docs.render_task.get_name": "Get this task's name",
-  "figura.docs.render_task.is_enabled": "Checks if this task is enabled",
-  "figura.docs.render_task.set_enabled": "Sets whether or not this task should be rendered",
+  "figura.docs.render_task.is_visible": "Checks if this task is visible",
+  "figura.docs.render_task.set_visible": "Sets whether or not this task should be rendered",
   "figura.docs.render_task.get_light": "Returns the light override value of this task",
   "figura.docs.render_task.set_light": "Sets the light override value of this task\nValues are given from 0 to 15, indicating the block light and sky light levels you want to use\nPassing nil will reset the lighting override for this task",
   "figura.docs.render_task.get_overlay": "Returns the overlay override value of this task",
@@ -1475,7 +1506,13 @@
   "figura.docs.renderer.set_primary_fire_texture": "Sets a custom primary fire texture, to render while the entity is on fire\nThe effect is compound by two layers\nThe secondary layer is what renders in first person\nThe absence of a secondary layer uses the primary layer as fallback",
   "figura.docs.renderer.set_secondary_fire_texture": "Sets a custom secondary fire texture, to render while the entity is on fire\nThe effect is compound by two layers\nThe secondary layer is what renders in first person\nThe absence of a secondary layer uses the primary layer as fallback",
   "figura.docs.renderer.set_render_left_arm": "Toggle if the left arm should be rendered in first person, regardless if you are holding an item or not",
+  "figura.docs.renderer.get_render_left_arm": "Gets if the left arm should be rendered while in first person",
   "figura.docs.renderer.set_render_right_arm": "Toggle if the right arm should be rendered in first person, regardless if you are holding an item or not",
+  "figura.docs.renderer.get_render_right_arm": "Gets if the right arm should be rendered while in first person",
+  "figura.docs.renderer.set_eye_offset": "Sets an offset for the entity eye position, altering the targeted block and entity",
+  "figura.docs.renderer.get_eye_offset": "Returns the offset for the entity eye position\nDefault nil",
+  "figura.docs.renderer.set_block_outline_color": "Sets the color of the selected block outline\nDefault alpha is 0.4\nMight not be compatible with shaders",
+  "figura.docs.renderer.get_block_outline_color": "Returns the set color for the selected block outline\nDefault nil",
 
 
   "figura.docs.sounds": "A global API which is used to play Minecraft sounds\nAccessed using the name \"sounds\"",
@@ -1509,9 +1546,11 @@
   "figura.docs.textures.copy": "Creates a copy of the texture\nThe copy is registered with the given name",
   "figura.docs.textures.get": "Gets a registered texture based on its name, or nil if no texture was found with that name",
   "figura.docs.textures.get_textures": "Returns a table with all textures used by this avatar\nDo not include generated textures from this API",
+  "figura.docs.textures.from_vanilla": "Returns a copy of a resource texture as a texture object for modifying",
 
   "figura.docs.texture": "A texture object, either generated by the model or created with the TextureAPI",
   "figura.docs.texture.get_name": "Returns this texture name",
+  "figura.docs.texture.get_path": "Returns this texture resource path location",
   "figura.docs.texture.get_dimensions": "Returns a vector of this texture width and height",
   "figura.docs.texture.get_pixel": "Gets the RGBA color from the specified pixel",
   "figura.docs.texture.set_pixel": "Sets the RGBA color of the specified pixel",
@@ -1520,6 +1559,13 @@
   "figura.docs.texture.restore": "Restores the texture to its original state, before any modifications",
   "figura.docs.texture.save": "Returns a base64 string representation of this texture",
   "figura.docs.texture.apply_func": "Calls the given function on the specified area of this texture, it will iterate over each pixel, and their current x, y and color will be given as arguments, the color in a RGBA vec4 format, and the return value will set that pixel color\nInvalid return values or nil takes no effects",
+  "figura.docs.texture.apply_matrix": "Transforms all pixels in the specified area of this texture by the matrix",
+
+  "figura.docs.texture_atlas": "A texture atlas object, with helper functions related to a texture atlas",
+  "figura.docs.texture_atlas.list_sprites": "Returns a table with all sprite paths under this atlas",
+  "figura.docs.texture_atlas.get_sprite_uv": "Returns a vec4 containing the UV of the given sprite\nThe UV is ordered as U0, V0, U1, V1",
+  "figura.docs.texture_atlas.get_width": "Returns the width of this atlas",
+  "figura.docs.texture_atlas.get_height": "Returns the height of this atlas",
 
 
   "figura.docs.vanilla_model": "A global API that provides functions to interact with the vanilla player model and its parts\nAccessed using the name \"vanilla_model\"",

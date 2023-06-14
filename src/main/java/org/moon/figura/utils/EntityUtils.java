@@ -1,5 +1,6 @@
 package org.moon.figura.utils;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -11,8 +12,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.moon.figura.mixin.ClientLevelInvoker;
+import org.moon.figura.mixin.gui.PlayerTabOverlayAccessor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -79,5 +82,22 @@ public class EntityUtils {
         }
 
         return playerList;
+    }
+
+    public static List<PlayerInfo> getTabList() {
+        return ((PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList()).getThePlayerInfos();
+    }
+
+    public static boolean checkInvalidPlayer(UUID id) {
+        if (id.version() != 4)
+            return true;
+
+        PlayerInfo playerInfo = getPlayerInfo(id);
+        if (playerInfo == null)
+            return false;
+
+        GameProfile profile = playerInfo.getProfile();
+        String name = profile.getName();
+        return name != null && (name.isBlank() || name.charAt(0) == '\u0000');
     }
 }

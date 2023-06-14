@@ -37,7 +37,6 @@ import org.moon.figura.config.Configs;
 import org.moon.figura.lua.FiguraLuaPrinter;
 import org.moon.figura.lua.FiguraLuaRuntime;
 import org.moon.figura.lua.api.entity.EntityAPI;
-import org.moon.figura.lua.api.event.LuaEvent;
 import org.moon.figura.lua.api.particle.ParticleAPI;
 import org.moon.figura.lua.api.ping.PingArg;
 import org.moon.figura.lua.api.ping.PingFunction;
@@ -69,7 +68,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 //the avatar class
 //contains all things related to the avatar
@@ -96,7 +94,7 @@ public class Avatar {
     public boolean minify;
 
     //Runtime data
-    private final Queue<Supplier<Varargs>> events = new ConcurrentLinkedQueue<>();
+    private final Queue<Runnable> events = new ConcurrentLinkedQueue<>();
 
     public AvatarRenderer renderer;
     public FiguraLuaRuntime luaRuntime;
@@ -263,16 +261,16 @@ public class Avatar {
     public void runPing(int id, byte[] data) {
         events.offer(() -> {
             if (scriptError || luaRuntime == null || !loaded)
-                return null;
+                return;
 
             LuaValue[] args = PingArg.fromByteArray(data, this);
             String name = luaRuntime.ping.getName(id);
             PingFunction function = luaRuntime.ping.get(name);
             if (args == null || function == null)
-                return null;
+                return;
 
             FiguraLuaPrinter.sendPingMessage(this, name, data.length, args);
-            return run(function.func, tick, (Object[]) args);
+            luaRuntime.run(function.func, tick, (Object[]) args);
         });
     }
 
@@ -282,10 +280,10 @@ public class Avatar {
 
     private void flushQueuedEvents() {
         //run all queued events
-        Supplier<Varargs> e;
+        Runnable e;
         while ((e = events.poll()) != null) {
             try {
-                e.get();
+                e.run();
             } catch (Exception | StackOverflowError ex) {
                 if (luaRuntime != null)
                     luaRuntime.error(ex);
@@ -294,42 +292,25 @@ public class Avatar {
     }
 
     public Varargs run(Object toRun, Instructions limit, Object... args) {
+        //stuff that was not run yet
         flushQueuedEvents();
 
-        //create event
         if (scriptError || luaRuntime == null || !loaded)
             return null;
 
-        //parse args
-        LuaValue[] values = new LuaValue[args.length];
-        for (int i = 0; i < values.length; i++)
-            values[i] = luaRuntime.typeManager.javaToLua(args[i]).arg1();
+        //run event
+        Varargs ret = luaRuntime.run(toRun, limit, args);
 
-        Varargs val = LuaValue.varargsOf(values);
+        //stuff that this run produced
+        flushQueuedEvents();
 
-        //instructions limit
-        luaRuntime.setInstructionLimit(limit.remaining);
+        //return
+        return ret;
+    }
 
-        //get and call event
-        try {
-            Varargs ret;
-            if (toRun instanceof LuaEvent event)
-                ret = event.call(val);
-            else if (toRun instanceof String event)
-                ret = luaRuntime.events.__index(event).call(val);
-            else if (toRun instanceof LuaValue func)
-                ret = func.invoke(val);
-            else
-                throw new IllegalArgumentException("Internal event error - Invalid type to run!");
-
-            limit.use(luaRuntime.getInstructions());
-            return ret;
-        } catch (Exception | StackOverflowError e) {
-            if (luaRuntime != null)
-                luaRuntime.error(e);
-        }
-
-        return LuaValue.NIL;
+    public void punish(int amount) {
+        if (luaRuntime != null)
+            luaRuntime.takeInstructions(amount);
     }
 
     // -- script events -- //
@@ -349,14 +330,14 @@ public class Avatar {
             run("TICK", tick);
     }
 
-    public void renderEvent(float delta) {
+    public void renderEvent(float delta, FiguraMat4 poseMatrix) {
         if (loaded && luaRuntime != null && luaRuntime.getUser() != null)
-            run("RENDER", render, delta, renderMode.name());
+            run("RENDER", render, delta, renderMode.name(), poseMatrix);
     }
 
-    public void postRenderEvent(float delta) {
+    public void postRenderEvent(float delta, FiguraMat4 poseMatrix) {
         if (loaded && luaRuntime != null && luaRuntime.getUser() != null)
-            run("POST_RENDER", render.post(), delta, renderMode.name());
+            run("POST_RENDER", render.post(), delta, renderMode.name(), poseMatrix);
         renderMode = EntityRenderMode.OTHER;
     }
 
@@ -401,6 +382,14 @@ public class Avatar {
         return rendered;
     }
 
+    public void playSoundEvent(String id, FiguraVec3 pos, float vol, float pitch, boolean loop, String category, String file) {
+        if (loaded) run("ON_PLAY_SOUND", tick, id, pos, vol, pitch, loop, category, file);
+    }
+
+    public void resourceReloadEvent() {
+        if (loaded) run("RESOURCE_RELOAD", tick);
+    }
+
     // -- host only events -- //
 
     public String chatSendMessageEvent(String message) { //piped event
@@ -408,8 +397,8 @@ public class Avatar {
         return val == null || (!val.isnil(1) && !Configs.CHAT_MESSAGES.value) ? message : val.isnil(1) ? "" : val.arg(1).tojstring();
     }
 
-    public String chatReceivedMessageEvent(Component message) { //special case
-        Varargs val = loaded ? run("CHAT_RECEIVE_MESSAGE", tick, message.getString(), Component.Serializer.toJson(message)) : null;
+    public String chatReceivedMessageEvent(String message, String json) { //special case
+        Varargs val = loaded ? run("CHAT_RECEIVE_MESSAGE", tick, message, json) : null;
         return val == null || val.isnil(1) ? null : val.arg(1).tojstring();
     }
 
@@ -431,6 +420,10 @@ public class Avatar {
     public boolean keyPressEvent(int key, int action, int modifiers) {
         Varargs result = loaded ? run("KEY_PRESS", tick, key, action, modifiers) : null;
         return isCancelled(result);
+    }
+
+    public void charTypedEvent(String chars, int modifiers, int codePoint) {
+        if (loaded) run("CHAR_TYPED", tick, chars, modifiers, codePoint);
     }
 
     // -- rendering events -- //
@@ -612,7 +605,7 @@ public class Avatar {
         );
 
         if (renderer.renderSpecialParts() > 0)
-            ((MultiBufferSource.BufferSource) renderer.bufferSource).endLastBatch();
+            ((MultiBufferSource.BufferSource) renderer.bufferSource).endBatch();
 
         RenderSystem.enableDepthTest();
         Lighting.setupFor3DItems();
@@ -727,7 +720,7 @@ public class Avatar {
         boolean ret = comp > 0 || headRender(stack, buffer, light, false);
 
         //after render
-        buffer.endLastBatch();
+        buffer.endBatch();
         stack.popPose();
 
         UIHelper.disableScissor();
@@ -865,13 +858,20 @@ public class Avatar {
         if (renderer != null)
             renderer.invalidate();
 
+        clearSounds();
+        clearParticles();
+
+        events.clear();
+    }
+
+    public void clearSounds() {
         SoundAPI.getSoundEngine().figura$stopSound(owner, null);
         for (SoundBuffer value : customSounds.values())
             value.releaseAlBuffer();
+    }
 
+    public void clearParticles() {
         ParticleAPI.getParticleEngine().figura$clearParticles(owner);
-
-        events.clear();
     }
 
     private int getFileSize() {
@@ -921,7 +921,6 @@ public class Avatar {
         events.offer(() -> {
             if (runtime.init(autoScripts))
                 init.use(runtime.getInstructions());
-            return null;
         });
     }
 

@@ -99,7 +99,7 @@ public class Configs {
 
     public static final EnumConfig
             LOG_LOCATION = new EnumConfig("log_location", SCRIPT, 0, 2),
-            FORMAT_SCRIPT = new EnumConfig("format_script", SCRIPT, 1, 3) {
+            FORMAT_SCRIPT = new EnumConfig("format_script", SCRIPT, 1, 4) {
                 {
                     String tooltip = "config.format_script.tooltip.";
                     this.tooltip = FiguraText.of(tooltip + "1")
@@ -149,7 +149,7 @@ public class Configs {
     public static final PositiveFloatConfig
             ACTION_WHEEL_SCALE = new PositiveFloatConfig("action_wheel_scale", ACTION_WHEEL, 1f);
     public static final EnumConfig
-            ACTION_WHEEL_TITLE = new EnumConfig("action_wheel_title", ACTION_WHEEL, 0, 5),
+            ACTION_WHEEL_TITLE = new EnumConfig("action_wheel_title", ACTION_WHEEL, 0, 7),
             ACTION_WHEEL_SLOTS_INDICATOR = new EnumConfig("action_wheel_slots_indicator", ACTION_WHEEL, 0, 3);
     public static final BoolConfig
             ACTION_WHEEL_DECORATIONS = new BoolConfig("action_wheel_decorations", ACTION_WHEEL, true);
@@ -174,6 +174,8 @@ public class Configs {
             TEXT_SCROLL_SPEED = new PositiveFloatConfig("text_scroll_speed", UI, 1f);
     public static final PositiveIntConfig
             TEXT_SCROLL_DELAY = new PositiveIntConfig("text_scroll_delay", UI, 20);
+    public static final BoolConfig
+            REDUCED_MOTION = new BoolConfig("reduced_motion", UI, false);
 
 
     // -- PAPERDOLL -- //
@@ -223,7 +225,7 @@ public class Configs {
                     PermissionManager.saveToDisk();
                 }
             },
-            EMOJIS = new EnumConfig("emojis", MISC, 0, 3);
+            EMOJIS = new EnumConfig("emojis", MISC, 1, 3);
     public static final BoolConfig
             EASTER_EGGS = new BoolConfig("easter_eggs", MISC, true);
 

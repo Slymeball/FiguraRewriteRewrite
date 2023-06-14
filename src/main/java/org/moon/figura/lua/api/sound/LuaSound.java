@@ -67,6 +67,10 @@ public class LuaSound {
         return subtitleText;
     }
 
+    public String getId() {
+        return id;
+    }
+
     private float calculateVolume() {
         return volume * SoundAPI.getSoundEngine().figura$getVolume(SoundSource.PLAYERS) * (owner.permissions.get(Permissions.VOLUME) / 100f);
     }
@@ -151,7 +155,7 @@ public class LuaSound {
     }
 
     @LuaWhitelist
-    @LuaMethodDoc("sound.pause") //TODO - no worky
+    @LuaMethodDoc("sound.pause")
     public LuaSound pause() {
         this.playing = false;
         if (handle != null)
